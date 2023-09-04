@@ -320,7 +320,7 @@ def checkout(request,grandtotal,total=0,quantity=0,cart_items=None,):
         'quantity': quantity,
         'cart_items': cart_items,
         'tax':tax,
-        'grandtotal':int(final_total),
+        'grandtotal':int(grandtotal),
         'addresses': addresses,
         # 'final_total': final_total,
         'final_total': grand_total,  # Pass the calculated grand_total to the template
@@ -566,7 +566,7 @@ def place_order(request):
                 request,
                 "store/payment.html",
                 {
-                "callback_url": "http://127.0.0.1:8000/carts/callback/?current_order={}".format(current_order),
+                "callback_url": "www.abhimanew.live/carts/callback/?current_order={}".format(current_order),
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "orders": orders,
                     "final_total": final_total,
