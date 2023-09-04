@@ -320,7 +320,7 @@ def checkout(request,grandtotal,total=0,quantity=0,cart_items=None,):
         'quantity': quantity,
         'cart_items': cart_items,
         'tax':tax,
-        'grandtotal':int(grandtotal),
+        'grandtotal':int(final_total),
         'addresses': addresses,
         # 'final_total': final_total,
         'final_total': grand_total,  # Pass the calculated grand_total to the template
