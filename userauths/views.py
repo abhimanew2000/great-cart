@@ -55,9 +55,7 @@ user = settings.AUTH_USER_MODEL
     # # }
     # return render(request, 'userauths/signup.html', context)
 
-def handlesignup(request):
-    # if 'email' in request.session:
-    #     return redirect('index')    
+def handlesignup(request): 
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
         if form.is_valid():
