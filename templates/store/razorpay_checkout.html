@@ -1,0 +1,16 @@
+<!-- razorpay_checkout.html -->
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Razorpay Checkout</h1>
+    <!-- Razorpay Payment Form -->
+    <form action="https://api.razorpay.com/v1/checkout/embedded" method="POST">
+        <input type="hidden" name="key_id" value="{{ order.key }}">
+        <input type="hidden" name="order_id" value="{{ order.id }}">
+        <input type="hidden" name="amount" value="{{ order.amount }}">
+        <input type="hidden" name="currency" value="{{ order.currency }}">
+        <input type="hidden" name="name" value="My Store">
+        <!-- You can add more hidden inputs or customize the form as needed -->
+        <button type="submit">Proceed to Razorpay</button>
+    </form>
+    <!-- Display any other content or instructions -->
+{% endblock %}

@@ -1,0 +1,50 @@
+<!-- adminauth/templates/adminauth/variationlist.html -->
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <!-- Display Variation Objects in a Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="bg-light rounded p-4">
+                <h6 class="mb-4">Variation Table</h6>
+                <a href="{% url 'add_variation' %}" class="btn btn-primary mb-4">Add Variants</a>
+                <form method="post">
+                    {% csrf_token %}
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Variant Category</th>
+                                <th>Variant Value</th>
+                                {% comment %} <th>Is Active</th> {% endcomment %}
+                                <th>Action</th> <!-- Add a new column for actions -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for variation in variations %}
+                                <tr>
+                                    <td>{{ variation.product.title }}</td>
+                                    <td>{{ variation.variation_category }}</td>
+                                    <td>{{ variation.variation_value }}</td>
+                                    {% comment %} <td>
+                                        <!-- Display an editable checkbox to set is_active status -->
+                                        <input type="checkbox" name="is_active_{{ variation.id }}" {% if variation.is_active %}checked{% endif %}>
+                                    </td> {% endcomment %}
+                                    <td>
+                                        <!-- Add a delete button for each variation -->
+                                        <a href="{% url 'edit_variation' variation.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                        <a href="{% url 'delete_variation' variation.id %}" class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% comment %} <button type="submit" class="btn btn-primary">Update Is Active</button> {% endcomment %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

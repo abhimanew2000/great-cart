@@ -1,0 +1,59 @@
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Order List</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Order Total</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <th scope="row">{{ order.id }}</th>
+                                <td>{{ order.first_name }}</td>
+                                <td>{{ order.email }}</td>
+                                <td>{{ order.order_total }}</td>
+                                <td>
+                                    <select name="status" class="form-control">
+                                    {% for choice in statuses %}
+                                        {% comment %} {% if choice == order.status %} 
+                                         <option value="{{ choice }}" selected>{{ choice }}</option>
+                                        {% else %} {% endcomment %}
+                                         <option  value="{{ choice.0 }}">{{choice.1}}</option>
+                                        {% comment %} {% endif %}  {% endcomment %}
+                                    {% endfor %}
+                                    </select>
+                                </td>
+                                <td class="align-middle text-center">
+                                    {% if order.STATUS == 'New' %}
+                                        <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger">Cancel Order</a>
+                                    {% else %}
+                                        <!-- Add logic for other actions here if needed -->
+                                        <span>No Action</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

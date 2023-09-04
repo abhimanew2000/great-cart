@@ -1,0 +1,33 @@
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}    
+    <!-- Stock Report Table -->
+    <h2 class="mt-4">Stock Report</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Title</th>
+                <th>Category</th>
+                <th>Image</th>
+                <th>Available Stock </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in stock  %}
+                <tr>
+                    <td>{{ product.title }}</td>
+                    <td>{{ product.category }}</td>
+                    <td><img src="{{ product.image.url }}" alt="{{ product.title }}" width="100"></td>
+                    <td>{{ product.view_count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <table class="table">
+        <!-- ... your existing sales report table code ... -->
+    </table>
+
+    
+{% endblock %}

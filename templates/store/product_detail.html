@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %} 
+   
+
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="card">
+        <div class="row no-gutters">
+            <aside class="col-md-6">
+                <article class="gallery-wrap"> 
+                    <div class="img-big-wrap">
+                        <div class="zoom-image-container">
+                            <img id="main-image" class="img-fluid zoom-image" src="{{ single_product.image.url }}" alt="{{ single_product.title }}">
+                            <div class="zoom-circle"></div>
+                        </div>
+                    </div>
+
+                    {% if images %}
+                        <div class="gallery-thumbs">
+                            {% for image in images %}
+                                <a href="#" class="thumb" onclick="swapImage('{{ image.image.url }}'); return false;">
+                                    <img src="{{ image.image.url }}" alt="{{ single_product.title }}">
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No additional images available for this product.</p>
+                    {% endif %}
+                </article>
+            </aside>
+            <main class="col-md-6 border-left">
+                <form action="{% url 'add_cart' single_product.id %}" method="POST">
+                    {% csrf_token %}
+                    <article class="content-body">
+                        <h2 class="title">{{ single_product.title }}</h2>
+                        <div class="mb-3"> 
+                            <var class="price h4">${{ single_product.selling_price }}</var> 
+                        </div> 
+                        <p>{{ single_product.description }}</p>
+                        {% if not is_accessory %}
+                            <hr>
+                            <!-- row.// -->
+                            <div class="row">
+                                <div class="item-option-select">
+                                    <h6>RAM, SIZE</h6>
+                                    <select name="ram,size" class="form-control" required>
+                                        <option value="" disabled selected >RAM, Size</option>                   
+                                        {% for variation in single_product.variation_set.ramsize %}
+                                            {% if variation.variation_category == 'ram,size' %}
+                                                <option value="{{ variation.variation_value }}">{{ variation.variation_value }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> <!-- row.// -->
+                        {% endif %}
+
+                        <hr>
+                        {% if single_product.view_count <= 0 %}
+                            <h5 class="text-danger">Out of Stock</h5>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">
+                                <span class="text">Add to Cart</span>
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        {% endif %}
+                    </article>
+                </form>
+                <form action="{% url 'add_to_wishlist' single_product.id %}" method="POST">
+                    {% csrf_token %}
+                    <!-- ... -->
+                    {% if not is_accessory %}
+                        <!-- ... -->
+                        <select name="variation_id" class="form-control" required>
+                            <option value="" disabled selected>Choose Variation</option>
+                            {% for variation in single_product.variation_set.ramsize %}
+                                {% if variation.variation_category == 'ram,size' %}
+                                    <option value="{{ variation.id }}">{{ variation.variation_value }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                    <!-- ... -->
+                    <button type="submit" class="btn btn-outline-secondary mt-2">
+                        Add to Wishlist
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </form>
+                {% if search_results %}
+                <h3>Search Results for "{{ search_query }}"</h3>
+                <ul>
+                    {% for result in search_results %}
+                        <li><a href="{% url 'product_detail' result.category.cat_slug result.slug %}">{{ result.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            </main>
+        </div>
+    </div>
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+
+    <br>
+
+    <div class="row">
+        <div class="col-md-9">
+            <header class="section-heading">
+                <h3>Customer Reviews </h3>  
+            </header>
+
+            <article class="box mb-3">
+                <div class="icontext w-100">
+                    <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
+                    <div class="text">
+                        <span class="date text-muted float-md-right">24.04.2020 </span>  
+                        <h6 class="mb-1">Mike John </h6>
+                    </div>
+                </div> <!-- icontext.// -->
+                <div class="mt-3">
+                    <p>
+                        Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip
+                    </p>    
+                </div>
+            </article>
+        </div> <!-- col.// -->
+    </div> <!-- row.// -->
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+</body>
+</body>
+<style>
+    .gallery-thumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .thumb {
+        width: 80px;
+        height: 80px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .zoom-image-container {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .zoom-image {
+        transition: transform 0.3s ease;
+        max-width: 100%;
+        display: block;
+    }
+
+    .zoom-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        border: 2px solid #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        transform: scale(1);
+        transition: transform 0.3s ease;
+    }
+</style>
+<script>
+    // Function to handle the zoom effect
+    function handleZoom(event) {
+        const imageContainer = event.currentTarget;
+        const image = imageContainer.querySelector('.zoom-image');
+        const zoomCircle = imageContainer.querySelector('.zoom-circle');
+
+        // Get the position of the mouse pointer relative to the image container
+        const rect = imageContainer.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const offsetY = event.clientY - rect.top;
+
+        // Check if the mouse pointer is within the image boundaries
+        if (
+            offsetX >= 0 && offsetX <= image.width &&
+            offsetY >= 0 && offsetY <= image.height
+        ) {
+            // Calculate the position of the zoom circle and set its size
+            const circleSize = 100; // Adjust this value to change the size of the zoom circle
+            const circleX = offsetX - circleSize / 2;
+            const circleY = offsetY - circleSize / 2;
+
+            // Apply the zoom effect by changing the scale of the image and zoom circle
+            image.style.transformOrigin = `${offsetX}px ${offsetY}px`;
+            image.style.transform = 'scale(2.2)';
+
+            zoomCircle.style.width = circleSize + 'px';
+            zoomCircle.style.height = circleSize + 'px';
+            zoomCircle.style.left = circleX + 'px';
+            zoomCircle.style.top = circleY + 'px';
+            zoomCircle.style.transform = 'scale(2)'; // Adjust this value to change the zoom circle's zoom level
+        } else {
+            // Hide the zoom circle if the mouse is outside the image boundaries
+            zoomCircle.style.transform = 'scale(0)';
+        }
+    }
+
+    // Function to reset the zoom effect and hide the zoom circle
+    function resetZoom(event) {
+        const imageContainer = event.currentTarget;
+        const image = imageContainer.querySelector('.zoom-image');
+        const zoomCircle = imageContainer.querySelector('.zoom-circle');
+
+        image.style.transform = 'scale(1)';
+        zoomCircle.style.transform = 'scale(0)';
+    }
+
+    // Attach event listeners to the image container
+    const imageContainers = document.querySelectorAll('.zoom-image-container');
+    imageContainers.forEach(container => {
+        container.addEventListener('mousemove', handleZoom);
+        container.addEventListener('mouseleave', resetZoom);
+    });
+    function swapImage(newImageSrc) {
+        const mainImage = document.getElementById('main-image');
+        mainImage.src = newImageSrc;
+    }
+</script>
+
+{% endblock %}

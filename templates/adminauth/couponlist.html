@@ -1,0 +1,39 @@
+{% extends 'adminauth/adminbase.html' %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Coupons</h1>
+        <a href="{% url 'add_coupon' %}" class="btn btn-primary">Add Coupon</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Coupon Code</th>
+                    <th>Discount (%)</th>
+                    <th>Expiry Date</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for coupon in coupons %}
+                    <tr>
+                        <td>{{ coupon.code }}</td>
+                        <td>{{ coupon.discount }}%</td>
+                        <td>{{ coupon.expiration_date }}</td>
+                        <td>{% if coupon.is_active %}Yes{% else %}No{% endif %}</td>
+                        <td>
+                            <a href="{% url 'edit_coupon' coupon.pk %}" class="btn btn-sm btn-primary me-2">Edit</a>
+                            <a href="{% url 'delete_coupon' coupon.pk  %}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No coupons available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ... -->
+
+<section class="section-content padding-y">
+    <div class="container">
+        {% if wishlist_items %}
+            <div class="row">
+                {% for wishlist_item in wishlist_items %}
+                <div class="col-md-4">
+                    <figure class="card card-product-grid">
+                        <div class="img-wrap">
+                            <a href="{{ wishlist_item.product.get_url }}"><img src="{{ wishlist_item.product.image.url }}"></a>
+                        </div>
+                        <figcaption class="info-wrap">
+                            <div class="fix-height">
+                                <a href="{{ wishlist_item.product.get_url }}" class="title">{{ wishlist_item.product.title }}</a>
+                                {% if wishlist_item.variation %}
+                                    <p class="text-muted small">
+                                        Variation:
+                                        {{ wishlist_item.variation.variation_value }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <a href="{{ wishlist_item.product.get_url }}" class="btn btn-block btn-primary">View Details</a>
+                            <a href="{% url 'remove_from_wishlist' wishlist_item.id %}" class="btn btn-block btn-outline-danger">Remove from Wishlist</a>
+
+                            <form action="{% url  'add_cart' wishlist_item.product.id  %}" method="POST" class="mt-2">
+                                {% csrf_token %}
+                                {% if wishlist_item.variation %}
+                                    <input type="hidden" name="{{ wishlist_item.variation.variation_category }}" value="{{ wishlist_item.variation.variation_value }}">
+                                {% endif %}
+                                <button type="submit" class="btn btn-block btn-success">Add to Cart</button>
+                            </form>
+                        </figcaption>
+                    </figure>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Your wishlist is empty.</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- ... -->
+{% endblock %}

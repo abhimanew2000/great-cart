@@ -1,0 +1,99 @@
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container pt-4 px-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="bg-light rounded p-4">
+                <h6 class="mb-4">Add Gallery Item</h6>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="product">Product:</label>
+                    <select name="product" id="product">
+                        {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="image">Image:</label>
+                    <input type="file" name="image" id="image">
+                    <br>
+                    <div class="image-cropper">
+                        <!-- Image Preview Area -->
+                        <div class="image-preview">
+                            <img id="imgView" src="" alt="Image Preview" style="max-width: 100%;">
+                        </div>
+                        
+                        <!-- Cropping Area -->
+                        <div class="image-cropper">
+                            <img id="croppedImg" src="" alt="Cropped Image" style="max-width: 100%; max-height: 200px;">
+                            <button type="button" id="saveButton" class="btn btn-primary mt-2">Save</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Add Item</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Cropper.js CSS -->
+<link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.min.css">
+
+<!-- Add jQuery (required by Cropper.js) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Add Cropper.js -->
+<script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Cropper.js on the image
+        let cropper = new Cropper(document.getElementById('imgView'), {
+            aspectRatio: 1 / 1,
+            viewMode: 1,
+            guides: true,
+            background: false,
+            autoCropArea: 1,
+            zoomable: true
+        });
+
+        // Update the cropped image when the "Save" button is clicked
+        $('#saveButton').on('click', function() {
+            let croppedCanvas = cropper.getCroppedCanvas({
+                width: 800, // Set the desired width of the cropped image
+                height: 800 // Set the desired height of the cropped image
+            });
+            let croppedImage = document.getElementById("croppedImg");
+            croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+        
+            let timestamp = new Date().getTime();
+            let fileName = `cropped-img-${timestamp}.png`;
+        
+            croppedCanvas.toBlob(blob => {
+                let input = document.getElementById('image');
+                let imgFile = new File([blob], fileName, { type: 'image/png' });
+                input.files = [imgFile];  // Set the selected image file for form submission
+            });
+        });
+
+        // Update the preview when a new image is selected
+        $('#image').on('change', function(event) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function() {
+                let dataURL = reader.result;
+                let image = document.getElementById('imgView');
+                image.src = dataURL;
+
+                cropper.replace(dataURL); // Replace the Cropper.js image with the new one
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        {% for item in order %} 
+                            <h4 class="card-title mb-4">Order Placed Successfully</h4>
+                            <p>Your order has been placed successfully. Thank you for shopping with us!</p>
+                            <p>Order Number: {{ item.id }}</p>
+                            <p>Order Total: ${{ item.order_total }}</p>
+                            <p>Payment Method: {{item.paymenttype}}</p>
+                            <p>We will contact you shortly for order confirmation and delivery details.</p>
+                        {% endfor %} 
+                        <!-- Display the ordered products -->
+                        <h5>Ordered Products:</h5>
+                        <ul>
+                            {% for order_product in order_products %}
+                            <li class="order-product">
+                                <img src="{{ order_product.product.image.url }}" alt="{{ order_product.product.title }}" class="product-image">
+                                <span class="product-title">{{ order_product.product.title }}</span>
+                                <span class="product-quantity">-Quantity: {{ order_product.quantity }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        
+                    </ul>
+
+                        <a href="{% url 'store' %}" class="btn btn-primary btn-block">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .order-products-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .order-product {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .product-image {
+        max-width: 100px;
+        max-height: 100px;
+        margin-right: 10px;
+    }
+    
+    .product-title {
+        font-weight: bold;
+    }
+    
+    .product-quantity {
+        color: gray;
+    }
+    </style>
+{% endblock %}

@@ -1,0 +1,48 @@
+<!-- adminauth/templates/adminauth/add_variation.html -->
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Add Variant</h6>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="product">Product:</label>
+                        <select id="product" name="product_id" class="form-control">
+                            {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="variation_category">Variant Category:</label>
+                        <select id="variation_category" name="variation_category" class="form-control">
+                            <option value="ram,size">RAM,Size </option>
+                            <!-- Add other variation categories if needed -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="variation_value">Variant Value:</label>
+                        <input type="text" id="variation_value" name="variation_value" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="is_active">Active:</label>
+                        <select id="is_active" name="is_active" class="form-control">
+                            <option value="True">True</option>
+                            <option value="False">False</option>
+                        </select>
+                    </div>
+
+                    <!-- Add more fields as needed -->
+
+                    <input type="submit" value="Add Variation" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

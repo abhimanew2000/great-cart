@@ -1,0 +1,20 @@
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container pt-4 px-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="bg-light rounded p-4">
+                <h6 class="mb-4">Delete Gallery Item</h6>
+                <p>Are you sure you want to delete "{{ gallery_item.product.title }}"?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger mt-3">Delete</button>
+                    <a href="{% url 'productgallery_list' %}" class="btn btn-secondary mt-3">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

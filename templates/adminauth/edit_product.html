@@ -1,0 +1,58 @@
+<!-- products/templates/adminauth/product_edit.html -->
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Edit Product</h6>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="title">Product Name:</label>
+                        <input type="text" id="title" name="title" class="form-control" value="{{ product.title }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select id="category" name="category" class="form-control">
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if category.id == product.category_id %}selected{% endif %}>{{ category.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Image:</label>
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}" style="max-width: 100px;">
+                        <!-- You can add an input field to change the image if needed -->
+                    </div>
+                    <div class="form-group">
+                        <label for="marked_price">Marked Price:</label>
+                        <input type="number" id="marked_price" name="marked_price" class="form-control" value="{{ product.marked_price }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="selling_price">Selling Price:</label>
+                        <input type="number" id="selling_price" name="selling_price" class="form-control" value="{{ product.selling_price }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="view_count">View Count:</label>
+                        <input type="number" id="view_count" name="view_count" class="form-control" value="{{ product.view_count }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="is_available">Availability:</label>
+                        <select id="is_available" name="is_available" class="form-control">
+                            <option value="True" {% if product.is_available %}selected{% endif %}>Available</option>
+                            <option value="False" {% if not product.is_available %}selected{% endif %}>Not Available</option>
+                        </select>
+                    </div>
+
+                    <!-- Add more fields as needed -->
+
+                    <input type="submit" value="Save Changes" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

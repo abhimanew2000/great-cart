@@ -1,0 +1,36 @@
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <!-- Edit Variation Form -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="bg-light rounded p-4">
+                <h6 class="mb-4">Edit Variation</h6>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ variation.id }}">
+                    <div class="form-group">
+                        <label for="product">Product</label>
+                        <input type="text" name="product" id="product" value="{{ variation.product }}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="variation_category">Variation Category</label>
+                        <input type="text" name="variation_category" id="variation_category" value="{{ variation.variation_category }}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="variation_value">Variation Value</label>
+                        <input type="text" name="variation_value" id="variation_value" value="{{ variation.variation_value }}" class="form-control">
+                    </div>
+                    {% comment %} <div class="form-group">
+                        <label for="is_active">Is Active</label>
+                        <input type="checkbox" name="is_active" id="is_active" {% if variation.is_active %}checked{% endif %}>
+                    </div> {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Update Variation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

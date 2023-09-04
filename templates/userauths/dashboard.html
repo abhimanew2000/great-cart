@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+    <div class="container">
+        <div class="row">
+            <aside class="col-md-3">
+                <!--   SIDEBAR   -->
+                <ul class="list-group">
+                    <!-- Account Settings Heading -->
+                    <h5 class="list-group-item list-group-item-action bg-dark text-white">Account Settings</h5>
+                    <a class="list-group-item " href="#"> My order history </a>
+                    <a class="list-group-item" href="#"> Transactions </a>
+                    <a class="list-group-item" href="#"> Return and refunds </a>
+                    <!-- Settings Dropdown Menu -->
+                    <div class="dropdown">
+                        <a class="list-group-item dropdown-toggle" href="#" role="button" id="settingsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Settings
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="settingsDropdown">
+                            <a class="dropdown-item" href="{% url 'profile_information' %}">Profile Information</a>
+                            <a class="dropdown-item" href="{% url 'manage_addresses' %}">Manage Addresses</a>
+                        </div>
+                    </div>
+                    <!-- End Settings Dropdown Menu -->
+                    <a class="list-group-item" href="#"> My Selling Items </a>
+                    <a class="list-group-item" href="#"> Received orders </a>
+                </ul>
+                <br>
+                <a class="btn btn-light btn-block" href="{% url 'handlelogout' %}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a> 
+                <!--   SIDEBAR .//END   -->
+            </aside>
+            <main class="col-md-9">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Order History</h5>
+            {% if orders %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Order Date</th>
+                            <th scope="col">Total Amount</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.created_at }}</td>
+                                <td>{{ order.order_total }}</td>
+                                <td>{{ order.status }}</td>
+                                <td>
+                                    <a href="{% url 'view_order' order.id %}" class="btn btn-primary">View</a>
+                                </td>
+                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No orders found.</p>
+            {% endif %}
+        </div>
+    </div>
+</main>
+        </div> <!-- row.// -->
+    </div>
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Product Gallery Management</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for gallery in galleries %}
+                            <tr>
+                                <td>{{ gallery.product.title }}</td>
+                                <td class="align-middle text-center">
+                                    {% if gallery.image %}
+                                        <img src="{{ gallery.image.url }}" alt="{{ gallery.product.title }}" style="max-width: 100px;">
+                                    {% else %}
+                                        No Image Available
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle text-center">
+                                    <a href="{% url 'edit_gallery' gallery.id %}" class="btn btn-primary">Edit</a>
+                                    <a href="{% url 'delete_gallery' gallery.id %}" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{% url 'add_gallery' %}" class="btn btn-primary">Add Gallery</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

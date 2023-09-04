@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Billing Address</h4>
+                        <!-- Display the selected address details -->
+                        <p>Selected Address:</p>
+                        <p>{{ selected_address }}</p>
+
+                        <!-- Display order total and Razorpay payment button -->
+                        <p>Order Total: $ {{ order_total|floatformat:2 }}</p>
+                        <button id="razorpay-btn" class="btn btn-info btn-block">Pay with Razorpay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    // Function to initialize Razorpay payment
+    function initiateRazorpayPayment(orderId, amount) {
+        var options = {
+            key: 'rzp_test_4o90y50Nv7s1jR', // Replace with your Razorpay API key
+            amount: amount * 100, // Amount in paisa (1 INR = 100 paisa)
+            currency: 'INR', // Currency code
+            order_id: orderId, // Razorpay order ID
+            name: 'Your Store Name',
+            description: 'Payment for your order',
+            handler: function (response) {
+                // This function is called when payment is successful
+                // You can handle the response and update the order status
+                console.log(response);
+                
+                // Here, you can make an AJAX call to your backend to verify the payment
+                // and create the order if the payment is successful
+                var data = {
+                    payment_id: response.razorpay_payment_id,
+                    order_id: orderId,
+                    amount: amount
+                };
+                console.log('This is something',data);
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'verify_razorpay_payment' %}',
+                    data: JSON.stringify(data),  // Convert data to JSON string
+                    contentType: 'application/json',  // Set content type
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },  // Include CSRF token
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Payment successful! Your order will be processed.');
+                            window.location.href = '{% url 'success' %}';  // Redirect to success page
+                        } else {
+                            alert('Payment verification failed. Please try again or contact support.');
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.log(xhr.responseText);  // Log the error response for debugging
+                        alert('An error occurred. Please try again later or contact support.');
+                    }
+                });
+            },
+            prefill: {
+                name: '{{ user.first_name }}', // User's first name
+                email: '{{ user.email }}' // User's email
+            }
+        };
+
+        var razorpayInstance = new Razorpay(options);
+        razorpayInstance.open();
+    }
+
+    // Attach click event to the Razorpay button
+    document.getElementById('razorpay-btn').addEventListener('click', function () {
+        // Fetch the order ID and amount from your backend
+        var orderId = '{{ razorpay_order_id }}'; // Use the actual orderId from the context
+        var amount = '{{ order_total }}'; // Replace with the actual order total amount
+
+        // Call the function to initialize the Razorpay payment
+        initiateRazorpayPayment(orderId, amount);
+    });
+</script>
+
+
+{% endblock %}

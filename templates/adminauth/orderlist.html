@@ -1,0 +1,59 @@
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Order List</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Order Total</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <th scope="row">{{ order.id }}</th>
+                                <td>{{ order.selected_address.first_name }}</td>
+                                <td>{{ order.selected_address.email }}</td>
+                                <td>{{ order.order_total }}</td>
+                                <form method="post" action="{% url 'manage_orderstatus' order.id %}">
+                                <td>
+                                    
+                                        {% csrf_token %}
+                                        <select name="status" class="form-control" {% if order.status == 'Cancelled' %}disabled{% endif %}>
+                                            {% for choice in statuses %}
+                                                {% if choice.0 == order.status %}
+                                                    <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
+                                                {% else %}
+                                                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    
+                                </td>
+                                <td class="align-middle text-center">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </td>
+                                </form>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

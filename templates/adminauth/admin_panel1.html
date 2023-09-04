@@ -1,0 +1,103 @@
+{% extends 'adminauth/adminbase.html' %}
+{% load static %}
+{% block content%}
+
+<head>
+    <title>Order Category Graph</title>
+    <!-- Include necessary CSS/JS libraries for charting (e.g., Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    <h1>Order Category Graph</h1>
+
+    <form method="get">
+        <label>Choose Interval:</label>
+        <input type="radio" name="interval" value="monthly" {% if interval == 'monthly' %}checked{% endif %}> Monthly
+        <input type="radio" name="interval" value="yearly" {% if interval == 'yearly' %}checked{% endif %}> Yearly
+        <input type="radio" name="interval" value="weekly" {% if interval == 'weekly' %}checked{% endif %}> Weekly
+        <button type="submit">Apply</button>
+    </form>
+    
+    <!-- Include a placeholder for the chart -->
+    <div style="display: flex; justify-content: space-between;">
+        <!-- Include a placeholder for the bar chart -->
+        <div style="width: 59%;">
+            <canvas id="orderCategoryChart" width="400" height="200"></canvas>
+        </div>
+        
+        <!-- Include a placeholder for the pie chart -->
+        <div style="width: 39%;">
+            <canvas id="orderCategoryPieChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+        
+    <script>
+        // JavaScript code to generate the chart using data_dict
+        // You can use libraries like Chart.js to create the chart
+        var dataFromDjango = JSON.parse('{{ data_dict_json|safe }}');
+
+var months = Object.keys(dataFromDjango);
+var categories = Array.from(new Set(Object.values(dataFromDjango).flatMap(Object.keys)));
+
+var data = {
+    labels: months,
+    datasets: categories.map(function(category) {
+        return {
+            label: category,
+            data: months.map(function(month) {
+                return dataFromDjango[month][category] || 0;
+            }),
+            borderWidth: 1
+        };
+    })
+};
+
+var ctx = document.getElementById('orderCategoryChart').getContext('2d');
+var chart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+ // JavaScript code to generate the pie chart using data_dict_json
+ var pieChartData = {
+    labels: categories,
+    datasets: [{
+        data: categories.map(function(category) {
+            return months.reduce(function(sum, month) {
+                return sum + (dataFromDjango[month][category] || 0);
+            }, 0);
+        }),
+        backgroundColor: categories.map(function(category) {
+            return getRandomColor();
+        })
+    }]
+};
+
+var ctxPie = document.getElementById('orderCategoryPieChart').getContext('2d');
+var pieChart = new Chart(ctxPie, {
+    type: 'pie',
+    data: pieChartData
+});
+
+// Function to generate random colors for pie chart
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+    </script>
+</body>
+
+
+           
+{% endblock %}

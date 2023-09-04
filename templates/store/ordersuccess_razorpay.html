@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Order Placed Successfully (Razorpay)</h4>
+                        <p>Your order has been successfully placed using Razorpay. Thank you for shopping with us!</p>
+                        {% comment %} <p>Order Number: {{ orders.id }}</p>
+                        <p>Order Total: ${{ orders.order_total }}</p> {% endcomment %}
+                        <p>Payment Method: Razorpay</p>
+                        <p>Your payment has been processed successfully.</p>
+                        
+                        <!-- Display the ordered products -->
+                        {% comment %} <h5>Ordered Products:</h5>
+                        <ul class="order-products-list">
+                            {% for order_product in order_products %}
+                            <li class="order-product">
+                                <img src="{{ order_product.product.image.url }}" alt="{{ order_product.product.title }}" class="product-image">
+                                <span class="product-title">{{ order_product.product.title }}</span>
+                                <span class="product-quantity">-Quantity: {{ order_product.quantity }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul> {% endcomment %}
+
+                        <a href="{% url 'store' %}" class="btn btn-primary btn-block">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+/* CSS styling for ordered product list goes here */
+</style>
+{% endblock %}

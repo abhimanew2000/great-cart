@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h5>Manage Addresses</h5>
+                <a href="{% url 'add_address' %}" class="btn btn-primary mb-3">Add Address</a>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>last Name</th>
+                            <th>email</th>
+                            <th>Phone</th>
+                            <th>address_1</th>
+                            {% comment %} <th>address_2</th> {% endcomment %}
+                            <th>City</th>
+                            <th>State</th>
+                            {% comment %} <th>Postal Code</th> {% endcomment %}
+                            <th>Country</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for address in addresses %}
+                        <tr>
+                            <td>{{ address.first_name }}</td>
+                            <td>{{ address.last_name }}</td>
+                            <td>{{ address.email }}</td>
+                            <td>{{ address.phone }}</td>
+                            <td>{{ address.address_line_1 }}</td>
+                            {% comment %} <td>{{ address.address_line_2 }}</td> {% endcomment %}
+                            <td>{{ address.city }}</td>
+                            <td>{{ address.state }}</td>
+                            <td>{{ address.country }}</td>
+                            <td>
+                                <a href="{% url 'edit_address' address.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{% url 'delete_address' address.id %}" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                
+{% endblock %}

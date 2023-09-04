@@ -1,0 +1,11 @@
+{% extends 'adminauth/adminbase.html' %}
+
+{% block content %}
+    <h1>Delete Coupon</h1>
+    <p>Are you sure you want to delete the coupon with code: {{ coupon.code }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'couponlist' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}
