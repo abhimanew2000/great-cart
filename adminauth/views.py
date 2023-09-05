@@ -412,7 +412,6 @@ def admin_panel(request):
 
 def sales_report(request):
     sales_report = Order.objects.all()  # Replace with your actual query
-    print(sales_report)  # Debug print
     return render(request, 'adminauth/reports.html', {'sales_report': sales_report})
 
 def cancel_report(request):
