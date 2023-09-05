@@ -260,8 +260,7 @@ def edit_variation(request, variation_id):
 def orderlist(request):
     orders = Order.objects.all()
     statuses=Order.STATUS
-    for order in orders:
-        print(order)
+
     context = {
         'orders': orders,
         'statuses':statuses
