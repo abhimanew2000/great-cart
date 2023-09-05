@@ -566,7 +566,7 @@ def place_order(request):
                 request,
                 "store/payment.html",
                 {
-                "callback_url": "www.abhimanew.live/carts/callback/?current_order={}".format(current_order),
+                "callback_url": "http://" + "www.abhimanew.live" + "/carts/callback/?current_order={}".format(current_order),
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "orders": orders,
                     "final_total": final_total,
