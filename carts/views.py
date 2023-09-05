@@ -233,6 +233,12 @@ RAZORPAY_KEY_SECRET = 'nlmYaIYmAyx29rc3BUZSmDRu'
 
 @login_required(login_url='handlelogin')
 def checkout(request,grandtotal,total=0,quantity=0,cart_items=None,):
+    try:
+        checkaddress=Address.objects.filter(user=request.user)
+    except:
+        return redirect('add_address')
+    if not checkaddress:
+        return redirect('add_address')
 
     current_user = request.user
     cart_items = CartItem.objects.filter(user=current_user, is_active=True)
