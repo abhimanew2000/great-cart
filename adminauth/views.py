@@ -18,6 +18,8 @@ from django.views.decorators.cache import never_cache
 # def admin_panel(request):
 #     return render(request, 'adminauth/admin_panel.html')
 def admin_signin(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return redirect('admin_panel')
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
