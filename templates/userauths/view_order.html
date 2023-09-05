@@ -35,7 +35,9 @@
                         {% endif %}
                     </div>
                     <div class="text-center">
+                        {% if order.status != 'Cancelled' %}
                         <a href="{% url 'invoice' order.id %}" class="btn btn-primary">Download Invoice</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
