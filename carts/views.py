@@ -567,12 +567,13 @@ def place_order(request):
             current_user = request.user
             print(current_user,"current_userrrrrrrrrr",current_order)
 
+            new_callback_url =  "http://" +"www.abhimanew.live" + "/carts/callback/?current_order={}".format(current_order),
 
             return render(
                 request,
                 "store/payment.html",
                 {
-                "callback_url": "http://www.abhimanew.live/carts/callback/?current_order={}".format(current_order),
+                "callback_url": new_callback_url,
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "orders": orders,
                     "final_total": final_total,
@@ -591,75 +592,6 @@ def place_order(request):
             print("pass")
     return render(request, "store/payment.html")
 
-
-
-# @csrf_exempt
-# def callback(request):
-#     print('enter to callback function')
-#     current_user = request.GET.get("current_user")   
-#     bulk_order_id = request.GET.get("current_order")
-#     print("current_userrrrrrrrrrrr",current_user)
-    
-
-#     current_order = Order.objects.filter(id = bulk_order_id)
-
-#     def verify_signature(response_data):
-#         client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
-#         print(client,'ccccccccccccccccccccc')
-#         return client.utility.verify_payment_signature(response_data)
-#     print(request,"request")
-#     print(request.POST,"requst.post")
-#     # signature_id = request.POST.get("razorpay_signature", "")
-#     # signature = request.META.get('HTTP_X_RAZORPAY_SIGNATURE', '')
-#     # print('signature is signature',signature)
-
-#     print(signature_id,"singature iddddddddddddddddd",request)
-#     if "razorpay_signature" in request.POST:
-#         payment_id = request.POST.get("razorpay_payment_id", "")
-#         provider_order_id = request.POST.get("razorpay_order_id", "")
-#         print(provider_order_id,"providerrrrrrrrrrrrrrrr")
-#         signature_id = request.POST.get("razorpay_signature", "")
-
-#         order = Razorpay_Order.objects.get(provider_order_id=provider_order_id)
-#         order.payment_id = payment_id
-#         order.signature_id = signature_id
-#         order.save()
-#         if  verify_signature(request.POST):
-#             order.status = PaymentStatus.SUCCESS
-#             order.save()
-#             print("success")
-#             current_order.update(payment_status = "Paid")
-#             print(current_order,"status")
-#             # cart_items.delete()
-#             # return render(request, "orders/order_summery.html", context={"status": order.status})
-#             # return redirect('order_summery', bulk_order_id=bulk_order_id)
-#             return redirect("order_success",id=bulk_order_id)
-
-        
-#         else:
-#             order.status = PaymentStatus.FAILURE
-#             order.save()
-#             current_order.delete()
-#             print("failed")
-#             return render(request, "orders/order_failed.html")
-        
-#     else:
-#         print(request.POST.get("error[metadata]"),"heloooooo")
-  
-#         payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
-#         provider_order_id = json.loads(request.POST.get("error[metadata]")).get(
-#             "order_id"
-#         )
-#         try:
-#             order = Razorpay_Order.objects.get(provider_order_id=provider_order_id)
-#             order.payment_id = payment_id
-#             order.status = PaymentStatus.FAILURE
-#             order.save()
-#             current_order.delete()
-#             print("else failed")
-#             return render(request, "orders/order_failed.html")
-#         except:
-#             return render(request, "orders/order_failed.html")
 
 
 
