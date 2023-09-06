@@ -536,10 +536,10 @@ def place_order(request):
             razorpay_order = client.order.create(
                 {"amount":int(amount)*100,"currency":"INR","payment_capture":"1"}
             )
-            orders = Razorpay_Order.objects.create(
+            orderss = Razorpay_Order.objects.create(
                     name=selected_address.first_name, amount=amount, provider_order_id=razorpay_order["id"]
                     )
-            orders.save()
+            orderss.save()
             order = Order.objects.create(
             user=request.user,
             selected_address=selected_address,
@@ -572,9 +572,9 @@ def place_order(request):
                 request,
                 "store/payment.html",
                 {
-                    "callback_url": f"http://www.abhimanew.live/carts/callback/?current_order={current_order}",
+                    "callback_url": "http://www.abhimanew.live/carts/callback/?current_order={}".format(current_order),
                     "razorpay_key": RAZORPAY_KEY_ID,
-                    "orders": orders,
+                    "orders": orderss,
                     "final_total": final_total,
 
                 },
