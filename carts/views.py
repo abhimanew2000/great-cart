@@ -567,13 +567,12 @@ def place_order(request):
             current_user = request.user
             print(current_user,"current_userrrrrrrrrr",current_order)
 
-            new_callback_url =  "http://" +"www.abhimanew.live" + "/carts/callback/?current_order={}".format(current_order),
-
+            
             return render(
                 request,
                 "store/payment.html",
                 {
-                "callback_url": new_callback_url,
+                "callback_url": "http://" + "www.abhimanew.live" + "/carts/callback/?current_order={}".format(current_order),
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "orders": orders,
                     "final_total": final_total,
