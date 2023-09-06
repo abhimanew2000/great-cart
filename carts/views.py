@@ -575,7 +575,7 @@ def place_order(request):
                     "callback_url": "http://www.abhimanew.live/carts/callback/?current_order={}".format(current_order),
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "orders": orders,
-                    "final_total": final_total,
+                    "final_total": str(final_total),
 
                 },
             )
@@ -630,24 +630,4 @@ def ordersuccess(request,id):
     
     return render(request, "store/order_success.html")        
 
-    
-# @never_cache
-# def order_summery(request, bulk_order_id):
-
-#     cart_items = CartItem.objects.all()
-#     for cart in cart_items:
-#         if cart.variant.variant_stock > 0:
-#             cart.delete()
-#         else:
-#             pass 
-#     orders = Order.objects.filter(bulk_order_id = bulk_order_id)
-#     print(bulk_order_id,"got it bulk order id")
-#     order_user = request.user
-#     # coupon_amount = orders.coupon.discount_price
-#     # total_amount = orders.total_amount+coupon_amount
-#     context = {
-#     "orders":orders,
-#     "user":order_user,
-#     # "total_amount":total_amount,
-#     }
-#     return render(request, "orders/order_summery.html",context)
+  
