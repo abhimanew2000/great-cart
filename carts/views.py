@@ -566,14 +566,13 @@ def place_order(request):
             current_order = bulk_order_id
             current_user = request.user
             print(current_user,"current_userrrrrrrrrr",current_order)
-            callback_url="http://www.abhimanew.live/carts/callback/?current_order={}"
 
             
             return render(
                 request,
                 "store/payment.html",
                 {
-                    "callback_url": callback_url.format(current_order),
+                    "callback_url": "http://www.abhimanew.live/carts/callback/?current_order={}".format(current_order),
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "orders": orders,
                     "final_total": final_total,
@@ -596,12 +595,14 @@ def place_order(request):
 
 
 
-@csrf_exempt      
+@csrf_exempt
 def callback(request):
     bulk_order_id = request.GET.get("current_order")
+    
     def verify_signature(response_data):
         client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
         return client.utility.verify_payment_signature(response_data)
+    
     if "razorpay_signature" in request.POST:
         payment_id = request.POST.get("razorpay_payment_id", "")
         provider_order_id = request.POST.get("razorpay_order_id", "")
@@ -613,19 +614,30 @@ def callback(request):
         if verify_signature(request.POST):
             orders.status = PaymentStatus.SUCCESS
             orders.save()
-            return redirect('order_success',bulk_order_id)
+            return redirect('order_success', bulk_order_id)
         else:
             orders.status = PaymentStatus.FAILURE
             orders.save()
             return render(request, "store/payment_failure.html", context={"status": orders.status})
-    else:
-        payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
-        provider_order_id = json.loads(request.POST.get("error[metadata]")).get("order_id")
-        orders = Razorpay_Order.objects.get(provider_order_id=provider_order_id)
-        orders.payment_id = payment_id
-        orders.status = PaymentStatus.FAILURE
-        orders.save()
-        return render(request, "payment_success.html", context={"status": orders.status})
+    
+    elif "error[metadata]" in request.POST:
+        error_metadata = request.POST.get("error[metadata]")
+        if error_metadata is not None:
+            try:
+                metadata = json.loads(error_metadata)
+                payment_id = metadata.get("payment_id")
+                provider_order_id = metadata.get("order_id")
+                orders = Razorpay_Order.objects.get(provider_order_id=provider_order_id)
+                orders.payment_id = payment_id
+                orders.status = PaymentStatus.FAILURE
+                orders.save()
+                return render(request, "payment_success.html", context={"status": orders.status})
+            except json.JSONDecodeError as e:
+                # Handle JSON parsing error
+                print(f"JSON parsing error: {e}")
+        else:
+            # Handle the case where "error[metadata]" is None
+            print("error[metadata] is None")
 
 def ordersuccess(request,id):
     
