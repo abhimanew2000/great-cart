@@ -544,18 +544,18 @@ def place_order(request):
             user=request.user,
             selected_address=selected_address,
             order_total= amount,
-            status='New',  # Set the status to 'New' for a new order
+            status='New',  
             paymenttype="Razorpay",
             
             
         )
             for cart_item in cart_items:
-                for variation in cart_item.variation.all():  # Loop through all variations for this cart item
+                for variation in cart_item.variation.all():  
                     OrderProduct.objects.create(
                             order=order,
                             user=request.user,
                             product=cart_item.product,
-                            variation=variation,  # Assign the specific variation
+                            variation=variation,  
                             quantity=cart_item.quantity,
                             product_price=cart_item.product.selling_price,
                         )
@@ -598,17 +598,13 @@ def place_order(request):
 @csrf_exempt      
 def callback(request):
     bulk_order_id = request.GET.get("current_order")
-    print(bulk_order_id,"bbbbbbbb")
     def verify_signature(response_data):
         client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
         return client.utility.verify_payment_signature(response_data)
-        print('11111111111111111111111111111')
     if "razorpay_signature" in request.POST:
         payment_id = request.POST.get("razorpay_payment_id", "")
         provider_order_id = request.POST.get("razorpay_order_id", "")
-        print("Provider Order ID:", provider_order_id)
         signature_id = request.POST.get("razorpay_signature", "")
-        print('signature idddddd',signature_id)
         orders = Razorpay_Order.objects.get(provider_order_id=provider_order_id)
         orders.payment_id = payment_id
         orders.signature_id = signature_id
@@ -623,9 +619,7 @@ def callback(request):
             return render(request, "store/payment_failure.html", context={"status": orders.status})
     else:
         payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
-        provider_order_id = json.loads(request.POST.get("error[metadata]")).get(
-            "order_id"
-        )
+        provider_order_id = json.loads(request.POST.get("error[metadata]")).get("order_id")
         orders = Razorpay_Order.objects.get(provider_order_id=provider_order_id)
         orders.payment_id = payment_id
         orders.status = PaymentStatus.FAILURE
