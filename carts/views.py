@@ -624,7 +624,7 @@ def callback(request):
         orders.payment_id = payment_id
         orders.status = PaymentStatus.FAILURE
         orders.save()
-        return render(request, "payment_success.html", context={"status": orders.status})
+        return render(request, "store/payment_failure.html", context={"status": orders.status})
 
 def ordersuccess(request,id):
     
