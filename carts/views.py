@@ -380,7 +380,7 @@ def add_to_wishlist(request, product_id):
 
         return redirect('wishlist')  # Redirect to the wishlist view
     else:
-        return redirect('login')
+        return redirect('handlelogin')
 def wishlist(request):
     if request.user.is_authenticated:
         user = request.user
