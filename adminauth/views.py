@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout
 from userauths.models import User
 from app.models import Category,Product
 from orders.models import Order,OrderProduct
@@ -31,6 +31,10 @@ def admin_signin(request):
             return redirect('admin_panel')
             
     return render(request, 'adminauth/adminsignin.html')  
+
+def adminlogout(request):
+    logout(request)
+    return redirect('admin_signin')
     
 
 def userinfo(request):

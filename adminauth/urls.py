@@ -5,6 +5,8 @@ from adminauth import views
 urlpatterns = [
     path('admin_signin', views.admin_signin, name='admin_signin'), 
     path('admin_panel', views.admin_panel, name='admin_panel'),
+    path('adminlogout', views.adminlogout, name='adminlogout'),
+
     path('userinfo', views.userinfo, name='userinfo'),
     path('categorylist', views.categorylist, name='categorylist'),
     path('add_category', views.add_category, name='add_category'),
