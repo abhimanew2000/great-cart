@@ -33,6 +33,8 @@ def admin_signin(request):
     return render(request, 'adminauth/adminsignin.html')  
 
 def adminlogout(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return redirect('admin_panel')
     logout(request)
     return redirect('admin_signin')
     
