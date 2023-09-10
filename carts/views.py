@@ -616,6 +616,7 @@ def callback(request):
         else:
             orders.status = PaymentStatus.FAILURE
             orders.save()
+
             return render(request, "store/payment_failure.html", context={"status": orders.status})
     else:
         payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")

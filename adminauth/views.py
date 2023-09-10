@@ -12,14 +12,16 @@ from django.template.loader import get_template
 from django.template import Context
 from reportlab.pdfgen import canvas
 from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-# def admin_panel(request):
-#     return render(request, 'adminauth/admin_panel.html')
+
+
 def admin_signin(request):
-    if request.user.is_authenticated and request.user.is_superuser:
+    if  request.user.is_authenticated and request.user.is_superuser:
         return redirect('admin_panel')
+
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -351,33 +353,7 @@ def delete_gallery(request, gallery_id):
     }
     return render(request, 'adminauth/delete_gallery.html', context)
 
-# def admin_panel(request):
-#     # Retrieve order data with related product and category
-#     orders = OrderProduct.objects.select_related('order__selected_address', 'product__category').all()
-
-#     for order in orders:
-#         print(order.product.category.title)
-
-#     # Process the data and create a dictionary to store counts
-#     data_dict = {}  # Dictionary to store counts per category per month
-    
-#     for order in orders:
-#         month = order.order.created_at.strftime('%b %Y')
-#         category = order.product.category.title
-#         print("Category:", category)  
-        
-#         if month not in data_dict:
-#             data_dict[month] = {}
-        
-#         if category not in data_dict[month]:
-#             data_dict[month][category] = 0
-        
-#         data_dict[month][category] += 1
-
-#     # Convert data_dict to JSON format
-#     data_dict_json = json.dumps(data_dict)
-    
-#     return render(request, 'adminauth/admin_panel.html', {'data_dict_json': data_dict_json})
+@login_required(login_url='admin_signin')
 def admin_panel(request):
     # Retrieve order data with related product and category
     orders = OrderProduct.objects.select_related('order__selected_address', 'product__category').all()
